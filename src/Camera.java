@@ -31,11 +31,12 @@ public class Camera {
 
         HitRecord record = new HitRecord();
 
-        if (world.hit(r, new Interval(0, Utils.INFINITY), record)) {
-            Vec3 direction = Vec3.randomOnHemisphere(record.normal);
-            return rayColor(new Ray(record.p, direction), depth - 1, world).multiply(0.5);
+        if (world.hit(r, new Interval(0.001, Utils.INFINITY), record)) {
+            Vec3 direction = record.normal.add(Vec3.randomUnitVector());
+            return rayColor(new Ray(record.p, direction), depth - 1, world).multiply(0.1);
         }
 
+        // if we make it till here, nothing in the world was hit.
         Vec3 unitDirection = Vec3.unitVector(r.getDirection());
         double a = 0.5 * (unitDirection.y() + 1.0);
 
