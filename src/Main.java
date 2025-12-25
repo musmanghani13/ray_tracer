@@ -1,0 +1,53 @@
+/*
+    We're building a virtual camera that shoots rays through pixels to see what color they should be.
+    Think of it like reverse photography - instead of light coming TO the camera, we shoot rays FROM the camera.
+
+    CAMERA              VIEWPORT             IMAGE FILE
+           ●                 ┌─────┐             ┌─────┐
+           |                 │     │             │█████│
+           |  Ray shoots →   │  ●  │  Maps to →  │█░░░█│
+           |  through        │     │             │█████│
+           |  viewport       └─────┘             └─────┘
+           |
+        (Point in 3D)    (Window in 3D)      (Pixel grid)
+
+    Mapping Process
+        1. For each pixel in the image (e.g., pixel [100, 50])
+        2. Calculate corresponding point on the viewport
+            Pixel (100, 50) → Viewport point (1.5, 0.8, -1.0) in 3D
+        3. Shoot a ray from camera through that viewport point (1.5, 0.8, -1.0)
+            Ray origin: Camera position (defined in Ray.java class)
+            Ray direction: From camera to viewport point (defined in Ray.java class)
+        4. Trace the ray to see what it hits in the 3D world
+        5. Determine color and write it to that pixel in the image
+*/
+public class Main {
+    public static void main(String[] args) {
+        HittableList world = new HittableList();
+
+        world.add(new Sphere(new Vec3(0, 0, -1), 0.5));
+        world.add(new Sphere(new Vec3(0, -100.5, -1), 100)); // background
+
+        Camera camera = new Camera();
+
+        camera.aspectRatio = 16.0 / 9.0;
+        camera.imageWidth = 400;
+        camera.setSamplesPerPixel(100);
+
+        camera.render(world);
+    }
+
+    private static Vec3 rayColor(Ray r, Hittable world) {
+        HitRecord rec = new HitRecord();
+
+        if (world.hit(r, new Interval(0, Utils.INFINITY), rec)){
+            return rec.normal.add(new Vec3(1, 1, 1)).multiply(0.5);
+        }
+
+        Vec3 unitDirection = Vec3.unitVector(r.getDirection());
+        double a = 0.5 * (unitDirection.y() + 1.0);
+
+        return new Vec3(1.0, 1.0, 1.0).multiply(1.0 - a)
+                .add(new Vec3(0.5, 0.7, 1.0).multiply(a));
+    }
+}
