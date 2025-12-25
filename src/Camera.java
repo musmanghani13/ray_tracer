@@ -33,7 +33,7 @@ public class Camera {
 
         if (world.hit(r, new Interval(0.001, Utils.INFINITY), record)) {
             Vec3 direction = record.normal.add(Vec3.randomUnitVector());
-            return rayColor(new Ray(record.p, direction), depth - 1, world).multiply(0.1);
+            return rayColor(new Ray(record.p, direction), depth - 1, world).multiply(0.9);
         }
 
         // if we make it till here, nothing in the world was hit.
