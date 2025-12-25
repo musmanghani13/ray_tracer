@@ -144,6 +144,41 @@ public class Vec3 {
         return v.unitVector();
     }
 
+    // bounce the ray in random direction
+    public static Vec3 random() {
+        return new Vec3(
+                Utils.randomDouble(),
+                Utils.randomDouble(),
+                Utils.randomDouble()
+        );
+    }
+
+    public static Vec3 random(double min, double max) {
+        return new Vec3(
+                Utils.randomDouble(min, max),
+                Utils.randomDouble(min, max),
+                Utils.randomDouble(min, max)
+        );
+    }
+
+    public static Vec3 randomUnitVector() {
+        while (true) {
+            Vec3 p = Vec3.random(-1, 1);
+            double lenSq = p.lengthSquared();
+            if (1e-160 < lenSq && lenSq <= 1) return p.divide(Math.sqrt(lenSq));
+        }
+    }
+
+    public static Vec3 randomOnHemisphere(Vec3 normal) {
+        Vec3 onUnitHemisphere = randomUnitVector();
+
+        if (Vec3.dot(onUnitHemisphere, normal) > 0.0) {
+            return onUnitHemisphere;
+        } else {
+            return onUnitHemisphere.negate();
+        }
+    }
+
     @Override
     public String toString() {
         return e[0] + " " + e[1] + " " + e[2];
