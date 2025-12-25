@@ -29,14 +29,20 @@ public class Camera {
             return new Vec3(0, 0, 0);
         }
 
-        HitRecord record = new HitRecord();
+        HitRecord rec = new HitRecord();
 
-        if (world.hit(r, new Interval(0.001, Utils.INFINITY), record)) {
-            Vec3 direction = record.normal.add(Vec3.randomUnitVector());
-            return rayColor(new Ray(record.p, direction), depth - 1, world).multiply(0.9);
+        if (world.hit(r, new Interval(0.001, Utils.INFINITY), rec)) {
+            ScatterRecord scatterRec = rec.material.scatter(r, rec);
+
+            if (scatterRec != null) {
+                Vec3 scatteredColor = rayColor(scatterRec.getScattered(), depth - 1, world);
+                return scatteredColor.multiply(scatterRec.getAttenuation());
+            }
+
+            return new Vec3(0, 0, 0);  // Absorbed
         }
 
-        // if we make it till here, nothing in the world was hit.
+        // Background gradient (sky)
         Vec3 unitDirection = Vec3.unitVector(r.getDirection());
         double a = 0.5 * (unitDirection.y() + 1.0);
 

@@ -179,6 +179,23 @@ public class Vec3 {
         }
     }
 
+    /*
+    Explanation from documentation
+        The reflected ray direction in red is just v+2b. In our design, n is a unit vector (length one), but v may not be.
+        To get the vector b, we scale the normal vector by the length of the projection of v onto n, which is given by the
+        dot product v⋅n. (If n were not a unit vector, we would also need to divide this dot product by the length of n.).
+        Finally, because v points into the surface, and we want b to point out of the surface, we need to negate this projection length.
+        The dot product calculates the projection of v onto n.
+     */
+    public static Vec3 reflect(Vec3 v, Vec3 n) {
+        return v.subtract(n.multiply(2 * Vec3.dot(v, n)));
+    }
+
+    public boolean nearZero() {
+        double s = 1e-8;
+        return (Math.abs(e[0]) < s) && (Math.abs(e[1]) < s) && (Math.abs(e[2]) < s);
+    }
+
     @Override
     public String toString() {
         return e[0] + " " + e[1] + " " + e[2];

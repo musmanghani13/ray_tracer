@@ -25,8 +25,15 @@ public class Main {
     public static void main(String[] args) {
         HittableList world = new HittableList();
 
-        world.add(new Sphere(new Vec3(0, 0, -1), 0.5));
-        world.add(new Sphere(new Vec3(0, -100.5, -1), 100)); // background
+        Material materialGround = new Lambertian(new Vec3(0.8, 0.8, 0.0));
+        Material materialCenter = new Lambertian(new Vec3(0.7, 0.3, 0.3));
+        Material leftMaterial = new Metal(new Vec3(0.8, 0.8, 0.8));
+        Material rightMaterial = new Metal(new Vec3(0.8, 0.6, 0.2));
+
+        world.add(new Sphere(new Vec3(0, 0, -1), 0.5, materialCenter));
+        world.add(new Sphere(new Vec3(0, -100.5, -1), 100, materialGround)); // background
+        world.add(new Sphere(new Vec3(-1, 0, -1), 0.5, leftMaterial));
+        world.add(new Sphere(new Vec3(1, 0, -1), 0.5, rightMaterial));
 
         Camera camera = new Camera();
 
@@ -37,17 +44,17 @@ public class Main {
         camera.render(world);
     }
 
-    private static Vec3 rayColor(Ray r, Hittable world) {
-        HitRecord rec = new HitRecord();
-
-        if (world.hit(r, new Interval(0, Utils.INFINITY), rec)){
-            return rec.normal.add(new Vec3(1, 1, 1)).multiply(0.5);
-        }
-
-        Vec3 unitDirection = Vec3.unitVector(r.getDirection());
-        double a = 0.5 * (unitDirection.y() + 1.0);
-
-        return new Vec3(1.0, 1.0, 1.0).multiply(1.0 - a)
-                .add(new Vec3(0.5, 0.7, 1.0).multiply(a));
-    }
+//    private static Vec3 rayColor(Ray r, Hittable world) {
+//        HitRecord rec = new HitRecord();
+//
+//        if (world.hit(r, new Interval(0, Utils.INFINITY), rec)){
+//            return rec.normal.add(new Vec3(1, 1, 1)).multiply(0.5);
+//        }
+//
+//        Vec3 unitDirection = Vec3.unitVector(r.getDirection());
+//        double a = 0.5 * (unitDirection.y() + 1.0);
+//
+//        return new Vec3(1.0, 1.0, 1.0).multiply(1.0 - a)
+//                .add(new Vec3(0.5, 0.7, 1.0).multiply(a));
+//    }
 }

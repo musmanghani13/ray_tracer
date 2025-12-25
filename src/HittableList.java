@@ -36,6 +36,7 @@ public class HittableList implements Hittable {
                 record.p = tempRecord.p;
                 record.normal = tempRecord.normal;
                 record .frontFacing = tempRecord.frontFacing;
+                record.material = tempRecord.material;
             }
         }
         return hitAnything;
