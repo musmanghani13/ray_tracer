@@ -15,7 +15,7 @@ This project is a complete implementation of a ray tracer capable of rendering p
 ## Credit
 
 This project is based on:
-- **"core.Ray Tracing in One Weekend"** by Peter Shirley
+- **"Ray Tracing in One Weekend"** by Peter Shirley
 - Tutorial available at: https://raytracing.github.io/books/RayTracingInOneWeekend.html
 - All ray tracing algorithms and mathematical foundations from the tutorial
 - Implementation translated from C++ to Java
