@@ -168,21 +168,15 @@ import core.Camera;// In Main.java
 Camera cam = new Camera();
 cam.aspectRatio =16.0/9.0;
 cam.imageWidth =400;              // Low resolution
-        cam.
+cam.setSamplesPerPixel(10);        // Few samples (noisy but fast)
 
-setSamplesPerPixel(10);        // Few samples (noisy but fast)
-
-cam.maxDepth =10;                 // Fewer bounces
+cam.maxDepth = 10;                 // Fewer bounces
 
 // Fewer spheres
-        for(
-int a = -5;
-a< 5;a++){     // 10×10 grid instead of 22×22
-        for(
-int b = -5;
-b< 5;b++){
-        // ...
-        }
+        for(int a = -5; a< 5; a++) {     // 10×10 grid instead of 22×22
+            for(int b = -5; b< 5; b++) {
+            // ...
+            }
         }
 ```
 
@@ -199,12 +193,10 @@ Balanced quality and render time:
 import core.Camera;
 
 Camera cam = new Camera();
-cam.imageWidth =800;              // Medium resolution (800×450)
-        cam.
+cam.imageWidth = 800;              // Medium resolution (800×450)
+cam.setSamplesPerPixel(100);       // Better antialiasing
 
-setSamplesPerPixel(100);       // Better antialiasing
-
-cam.maxDepth =50;                 // Full bounce depth
+cam.maxDepth = 50;                 // Full bounce depth
 ```
 
 **Estimated time**: 5-15 minutes  
@@ -220,12 +212,10 @@ Maximum quality as shown in the tutorial:
 import core.Camera;
 
 Camera cam = new Camera();
-cam.imageWidth =1200;             // High resolution (1200×675)
-        cam.
+cam.imageWidth = 1200;             // High resolution (1200×675)
+cam.setSamplesPerPixel(500);       // Smooth, minimal noise
 
-setSamplesPerPixel(500);       // Smooth, minimal noise
-
-cam.maxDepth =50;                 // Full bounce depth
+cam.maxDepth = 50;                 // Full bounce depth
 ```
 
 **Estimated time**: 30-60 minutes (depends on CPU)  
@@ -242,13 +232,11 @@ cam.maxDepth =50;                 // Full bounce depth
 // Keep only the 3 large feature spheres
 
 import geometry.Sphere;
-import math.Vec3;world.add(new Sphere(new Vec3(0, 1,0), 1.0,material1));      // Glass
-        world.
+import math.Vec3;
 
-add(new Sphere(new Vec3(-4, 1,0), 1.0,material2));     // Brown
-        world.
-
-add(new Sphere(new Vec3(4, 1,0), 1.0,material3));      // material.Metal
+world.add(new Sphere(new Vec3(0, 1,0), 1.0,material1));      // Glass
+world.add(new Sphere(new Vec3(-4, 1,0), 1.0,material2));     // Brown
+world.add(new Sphere(new Vec3(4, 1,0), 1.0,material3));      // material.Metal
 ```
 
 **Spheres**: 4 (including ground)  
