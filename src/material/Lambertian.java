@@ -1,3 +1,9 @@
+package material;
+
+import core.Ray;
+import geometry.HitRecord;
+import math.Vec3;
+
 public class Lambertian extends Material {
     private Vec3 reflectance;
 

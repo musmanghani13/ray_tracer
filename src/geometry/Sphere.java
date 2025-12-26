@@ -1,3 +1,10 @@
+package geometry;
+
+import core.Interval;
+import core.Ray;
+import material.Material;
+import math.Vec3;
+
 public class Sphere implements Hittable {
     private Vec3 center;
     private double radius;

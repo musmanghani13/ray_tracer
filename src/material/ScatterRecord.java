@@ -1,3 +1,8 @@
+package material;
+
+import core.Ray;
+import math.Vec3;
+
 public class ScatterRecord {
     private Vec3 attenuation; // signals how much a ray color should be enhanced (multiplied)
     private Ray scattered;

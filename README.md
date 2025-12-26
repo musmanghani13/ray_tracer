@@ -1,11 +1,11 @@
-# Java Ray Tracer
+# Java core.Ray Tracer
 
 A physically-based ray tracer implementation in Java.
 
 ## Overview
 
 This project is a complete implementation of a ray tracer capable of rendering photorealistic images with:
-- **Multiple material types**: Diffuse (Lambertian), metal with adjustable fuzziness, and glass with refraction
+- **Multiple material types**: Diffuse (material.Lambertian), metal with adjustable fuzziness, and glass with refraction
 - **Advanced camera features**: Positionable camera, adjustable field of view, and depth-of-field effects
 - **Physically accurate lighting**: Recursive ray tracing with configurable bounce depth
 - **Antialiasing**: Multiple samples per pixel for smooth edges
@@ -15,7 +15,7 @@ This project is a complete implementation of a ray tracer capable of rendering p
 ## Credit
 
 This project is based on:
-- **"Ray Tracing in One Weekend"** by Peter Shirley
+- **"core.Ray Tracing in One Weekend"** by Peter Shirley
 - Tutorial available at: https://raytracing.github.io/books/RayTracingInOneWeekend.html
 - All ray tracing algorithms and mathematical foundations from the tutorial
 - Implementation translated from C++ to Java
@@ -30,18 +30,18 @@ This project is based on:
 ### Simple Scene
 ![Simple Scene](images/output_3_materials.jpg)
 
-*Basic scene with 3 spheres demonstrating 3 different materials (glass, metal and Lambertian respectively from left to right).*
+*Basic scene with 3 spheres demonstrating 3 different materials (glass, metal and material.Lambertian respectively from left to right).*
 
 ## Features
 
 ### Materials
-- **Lambertian (Diffuse)**: Matte surfaces that scatter light randomly
-- **Metal**: Reflective surfaces with adjustable fuzziness/roughness
-- **Dielectric (Glass)**: Transparent materials with refraction, total internal reflection, and Schlick's approximation
+- **material.Lambertian (Diffuse)**: Matte surfaces that scatter light randomly
+- **material.Metal**: Reflective surfaces with adjustable fuzziness/roughness
+- **material.Dielectric (Glass)**: Transparent materials with refraction, total internal reflection, and Schlick's approximation
 
-### Camera
+### core.Camera
 - **Positionable camera** with three key vectors:
-   - **`lookfrom`**: Camera position in 3D space.
+   - **`lookfrom`**: core.Camera position in 3D space.
       - This is a vector with x, y and z coordinates for camera placement.
       - Example: `lookfrom = (13, 2, 3)` places camera 13 units right, 2 units up, 3 units forward
 
@@ -77,24 +77,33 @@ This project is based on:
 ## Project Structure
 ```
 src/
-├── Main.java              # Entry point, scene setup
-├── Camera.java            # Camera and rendering logic
-├── Ray.java               # Ray representation
-├── Vec3.java              # 3D vector math operations
-├── Color.java             # Color output utilities
-├── Interval.java          # Range/interval utilities
-├── Utils.java             # Random numbers and constants
-├── Hittable.java          # Interface for ray-hittable objects
-├── HitRecord.java         # Intersection data storage
-├── HittableList.java      # Collection of hittable objects
-├── Sphere.java            # Sphere primitive
-├── Material.java          # Abstract material base class
-├── ScatterRecord.java     # Material scatter result
-├── Lambertian.java        # Diffuse material
-├── Metal.java             # Reflective material
-└── Dielectric.java        # Glass/transparent material
+├── Main.java                          # Entry point and scene setup
+│
+├── core/                              # Core ray tracing components
+│   ├── Camera.java                    # Camera and rendering logic
+│   ├── Ray.java                       # Ray representation
+│   └── Interval.java                  # Range/interval utilities
+│
+├── math/                              # Mathematical utilities
+│   ├── Vec3.java                      # 3D vector operations
+│   └── Utils.java                     # Random numbers and constants
+│
+├── geometry/                          # Geometric primitives
+│   ├── Hittable.java                  # Interface for hittable objects
+│   ├── HitRecord.java                 # Intersection data
+│   ├── HittableList.java              # Object collection
+│   └── Sphere.java                    # Sphere primitive
+│
+├── material/                          # Material implementations
+│   ├── Material.java                  # Abstract material base
+│   ├── ScatterRecord.java             # Scatter result data
+│   ├── Lambertian.java                # Diffuse/matte material
+│   ├── Metal.java                     # Reflective material
+│   └── Dielectric.java                # Glass/transparent material
+│
+└── rendering/                         # Rendering utilities
+    └── Color.java                     # Color output and conversion
 ```
-
 ## Running in IntelliJ IDEA
 
 ### Prerequisites
@@ -153,20 +162,28 @@ This is where .class files (compiled source code) will live.
 ### Quick Rendering (For Testing)
 
 For fast renders during development or testing:
+
 ```java
-// In Main.java
+import core.Camera;// In Main.java
 Camera cam = new Camera();
-cam.aspectRatio = 16.0 / 9.0;
-cam.imageWidth = 400;              // Low resolution
-cam.setSamplesPerPixel(10);        // Few samples (noisy but fast)
-cam.maxDepth = 10;                 // Fewer bounces
+cam.aspectRatio =16.0/9.0;
+cam.imageWidth =400;              // Low resolution
+        cam.
+
+setSamplesPerPixel(10);        // Few samples (noisy but fast)
+
+cam.maxDepth =10;                 // Fewer bounces
 
 // Fewer spheres
-for (int a = -5; a < 5; a++) {     // 10×10 grid instead of 22×22
-    for (int b = -5; b < 5; b++) {
+        for(
+int a = -5;
+a< 5;a++){     // 10×10 grid instead of 22×22
+        for(
+int b = -5;
+b< 5;b++){
         // ...
-    }
-}
+        }
+        }
 ```
 
 **Estimated time**: 1-2 minutes  
@@ -177,11 +194,17 @@ for (int a = -5; a < 5; a++) {     // 10×10 grid instead of 22×22
 ### Medium Quality
 
 Balanced quality and render time:
+
 ```java
+import core.Camera;
+
 Camera cam = new Camera();
-cam.imageWidth = 800;              // Medium resolution (800×450)
-cam.setSamplesPerPixel(100);       // Better antialiasing
-cam.maxDepth = 50;                 // Full bounce depth
+cam.imageWidth =800;              // Medium resolution (800×450)
+        cam.
+
+setSamplesPerPixel(100);       // Better antialiasing
+
+cam.maxDepth =50;                 // Full bounce depth
 ```
 
 **Estimated time**: 5-15 minutes  
@@ -192,11 +215,17 @@ cam.maxDepth = 50;                 // Full bounce depth
 ### High Quality (Final Render)
 
 Maximum quality as shown in the tutorial:
+
 ```java
+import core.Camera;
+
 Camera cam = new Camera();
-cam.imageWidth = 1200;             // High resolution (1200×675)
-cam.setSamplesPerPixel(500);       // Smooth, minimal noise
-cam.maxDepth = 50;                 // Full bounce depth
+cam.imageWidth =1200;             // High resolution (1200×675)
+        cam.
+
+setSamplesPerPixel(500);       // Smooth, minimal noise
+
+cam.maxDepth =50;                 // Full bounce depth
 ```
 
 **Estimated time**: 30-60 minutes (depends on CPU)  
@@ -207,12 +236,19 @@ cam.maxDepth = 50;                 // Full bounce depth
 ### Scene Complexity
 
 #### Simple Scene (Few Spheres)
+
 ```java
 // Comment out the random sphere generation loop
 // Keep only the 3 large feature spheres
-world.add(new Sphere(new Vec3(0, 1, 0), 1.0, material1));      // Glass
-world.add(new Sphere(new Vec3(-4, 1, 0), 1.0, material2));     // Brown
-world.add(new Sphere(new Vec3(4, 1, 0), 1.0, material3));      // Metal
+
+import geometry.Sphere;
+import math.Vec3;world.add(new Sphere(new Vec3(0, 1,0), 1.0,material1));      // Glass
+        world.
+
+add(new Sphere(new Vec3(-4, 1,0), 1.0,material2));     // Brown
+        world.
+
+add(new Sphere(new Vec3(4, 1,0), 1.0,material3));      // material.Metal
 ```
 
 **Spheres**: 4 (including ground)  
@@ -284,23 +320,23 @@ cam.setSamplesPerPixel(500);
 
 ### Rendering Algorithm
 1. For each pixel, shoot multiple rays with random offsets (antialiasing)
-2. Each ray bounces recursively up to `maxDepth` times. `maxDepth` variable also controls the base case for our `rayColor` method in `Camera.java` class.
+2. Each ray bounces recursively up to `maxDepth` times. `maxDepth` variable also controls the base case for our `rayColor` method in `core.Camera.java` class.
 3. Rays accumulate color from materials and sky
 4. Final pixel color is average of all samples
 
 ### Materials Math
-- **Lambertian**: Cosine-weighted hemisphere sampling
-- **Metal**: Perfect reflection with optional random fuzz
-- **Dielectric**: Snell's law refraction + Schlick's approximation for reflectance. The equations are inside the article. :)
+- **material.Lambertian**: Cosine-weighted hemisphere sampling
+- **material.Metal**: Perfect reflection with optional random fuzz
+- **material.Dielectric**: Snell's law refraction + Schlick's approximation for reflectance. The equations are inside the article. :)
 
-### Camera Model
+### core.Camera Model
 - Thin lens approximation for depth of field
 - Rays originate from random points on defocus disk
 - Viewport positioned at focus distance
 
 ## License
 
-This project follows the original tutorial's spirit of education and learning. The algorithms and concepts are from Peter Shirley's "Ray Tracing in One Weekend" book.
+This project follows the original tutorial's spirit of education and learning. The algorithms and concepts are from Peter Shirley's "core.Ray Tracing in One Weekend" book.
 
 ## Author
 
