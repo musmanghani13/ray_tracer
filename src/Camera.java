@@ -10,10 +10,49 @@ public class Camera {
     private Vec3 pixelDeltaV;
     private int samplesPerPixel;
     private double pixelSamplesScale;
+    private double verticalFov = 90;
+    private Vec3 lookFrom;
+    private Vec3 lookAt;
+    private Vec3 vUp;
+
+    // orthogonal vectors for camera frame
+    private Vec3 u, v, w;
 
     public double aspectRatio = 1.0;
     public int imageWidth = 100;
-    public int maxDepth = 50;  // NEW: Maximum number of ray bounces
+    public int maxDepth = 50;
+
+    public Vec3 getvUp() {
+        return vUp;
+    }
+
+    public void setvUp(Vec3 vUp) {
+        this.vUp = vUp;
+    }
+
+    public Vec3 getLookAt() {
+        return lookAt;
+    }
+
+    public void setLookAt(Vec3 lookAt) {
+        this.lookAt = lookAt;
+    }
+
+    public Vec3 getLookFrom() {
+        return lookFrom;
+    }
+
+    public void setLookFrom(Vec3 lookFrom) {
+        this.lookFrom = lookFrom;
+    }
+
+    public double getVerticalFov() {
+        return verticalFov;
+    }
+
+    public void setVerticalFov(double verticalFov) {
+        this.verticalFov = verticalFov;
+    }
 
     public void setSamplesPerPixel(int samplesPerPixel) {
         this.samplesPerPixel = samplesPerPixel;
@@ -56,22 +95,29 @@ public class Camera {
 
         pixelSamplesScale = 1.0 / samplesPerPixel;
 
+        cameraCenter = this.getLookFrom();
+
         // camera config
-        double focalLength = 1.0;
-        double viewportHeight = 2.0;
+        double focalLength = (this.getLookFrom().subtract(this.getLookAt())).length();
+        double theta = Utils.degreesToRadians(verticalFov);
+        double h = Math.tan(theta / 2);
+        double viewportHeight = 2 * h * focalLength;
         double viewportWidth = viewportHeight * ((double)(imageWidth) / imageHeight);
-        this.cameraCenter = new Vec3(0, 0, 0);
+        // u,v,w unit basis vectors for the camera coordinate frame.
+        w = Vec3.unitVector(this.getLookFrom().subtract(this.getLookAt()));
+        u = Vec3.unitVector(Vec3.cross(this.getvUp(), w));
+        v = Vec3.cross(w, u);
 
         // vectors over horizontal and vertical edges of viewport
-        Vec3 viewportU = new Vec3(viewportWidth, 0, 0);
-        Vec3 viewportV = new Vec3(0, -viewportHeight, 0);
+        Vec3 viewportU = u.multiply(viewportWidth);
+        Vec3 viewportV = v.negate().multiply(viewportHeight);
 
         // delta vectors
         this.pixelDeltaU = viewportU.divide(imageWidth);
         this.pixelDeltaV = viewportV.divide(imageHeight);
 
         Vec3 viewportUpperLeft = cameraCenter
-                .subtract(new Vec3(0, 0, focalLength))
+                .subtract(w.multiply(focalLength))
                 .subtract(viewportU.divide(2))
                 .subtract(viewportV.divide(2));
 

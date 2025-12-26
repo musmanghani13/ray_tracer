@@ -42,6 +42,10 @@ public class Main {
         camera.aspectRatio = 16.0 / 9.0;
         camera.imageWidth = 400;
         camera.setSamplesPerPixel(100);
+        camera.setVerticalFov(20);
+        camera.setLookFrom(new Vec3(-2, 2, 1));
+        camera.setLookAt(new Vec3(0, 0, -1));
+        camera.setvUp(new Vec3(0, 1, 0));
 
         camera.render(world);
     }
