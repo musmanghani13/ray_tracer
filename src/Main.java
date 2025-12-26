@@ -83,8 +83,8 @@ public class Main {
         Camera cam = new Camera();
 
         cam.aspectRatio = 16.0 / 9.0;
-        cam.imageWidth = 1200;
-        cam.setSamplesPerPixel(500);
+        cam.imageWidth = 400;
+        cam.setSamplesPerPixel(50);
         cam.maxDepth = 50;
 
         cam.setVerticalFov(20);
