@@ -179,6 +179,15 @@ public class Vec3 {
         }
     }
 
+    public static Vec3 randomInUnitDisk() {
+        while (true) {
+            Vec3 p = new Vec3(Utils.randomDouble(-1, 1), Utils.randomDouble(-1, 1), 0);
+            if (p.lengthSquared() < 1) {
+                return p;
+            }
+        }
+    }
+
     /*
     Explanation from documentation
         The reflected ray direction in red is just v+2b. In our design, n is a unit vector (length one), but v may not be.

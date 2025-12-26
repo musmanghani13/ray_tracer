@@ -17,6 +17,11 @@ public class Camera {
 
     // orthogonal vectors for camera frame
     private Vec3 u, v, w;
+    private double deFocusAngle = 0;
+    private double focusDist = 10;
+
+    private Vec3 deFocusDiskU;
+    private Vec3 deFocusDiskV;
 
     public double aspectRatio = 1.0;
     public int imageWidth = 100;
@@ -48,6 +53,22 @@ public class Camera {
 
     public double getVerticalFov() {
         return verticalFov;
+    }
+
+    public double getFocusDist() {
+        return focusDist;
+    }
+
+    public void setFocusDist(double focusDist) {
+        this.focusDist = focusDist;
+    }
+
+    public double getDeFocusAngle() {
+        return deFocusAngle;
+    }
+
+    public void setDeFocusAngle(double deFocusAngle) {
+        this.deFocusAngle = deFocusAngle;
     }
 
     public void setVerticalFov(double verticalFov) {
@@ -98,10 +119,9 @@ public class Camera {
         cameraCenter = this.getLookFrom();
 
         // camera config
-        double focalLength = (this.getLookFrom().subtract(this.getLookAt())).length();
         double theta = Utils.degreesToRadians(verticalFov);
         double h = Math.tan(theta / 2);
-        double viewportHeight = 2 * h * focalLength;
+        double viewportHeight = 2 * h * this.getFocusDist();
         double viewportWidth = viewportHeight * ((double)(imageWidth) / imageHeight);
         // u,v,w unit basis vectors for the camera coordinate frame.
         w = Vec3.unitVector(this.getLookFrom().subtract(this.getLookAt()));
@@ -117,11 +137,15 @@ public class Camera {
         this.pixelDeltaV = viewportV.divide(imageHeight);
 
         Vec3 viewportUpperLeft = cameraCenter
-                .subtract(w.multiply(focalLength))
+                .subtract(w.multiply(this.getFocusDist()))
                 .subtract(viewportU.divide(2))
                 .subtract(viewportV.divide(2));
 
         this.pixel00Location = viewportUpperLeft.add(pixelDeltaU.add(pixelDeltaV).multiply(0.5));
+
+        double deFocusRadius = this.getFocusDist() * Math.tan(Utils.degreesToRadians(this.getDeFocusAngle() / 2));
+        this.deFocusDiskU = u.multiply(deFocusRadius);
+        this.deFocusDiskV = v.multiply(deFocusRadius);
     }
 
     private Ray getRay(int column, int row) {
@@ -130,9 +154,16 @@ public class Camera {
                 .add(pixelDeltaU.multiply(column + offset.x()))
                 .add(pixelDeltaV.multiply(row + offset.y()));
 
-        Vec3 rayDirection = pixelSample.subtract(cameraCenter);
+        Vec3 rayOrigin = (this.getDeFocusAngle() <= 0) ? cameraCenter : deFocusDiskSample();
+        Vec3 rayDirection = pixelSample.subtract(rayOrigin);
 
-        return new Ray(cameraCenter, rayDirection);
+        return new Ray(rayOrigin, rayDirection);
+    }
+
+    private Vec3 deFocusDiskSample() {
+        // Returns a random point in the camera defocus disk
+        Vec3 p = Vec3.randomInUnitDisk();
+        return cameraCenter.add(deFocusDiskU.multiply(p.x())).add(deFocusDiskV.multiply(p.y()));
     }
 
     private Vec3 sampleSquare() {

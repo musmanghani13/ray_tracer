@@ -25,28 +25,67 @@ public class Main {
     public static void main(String[] args) {
         HittableList world = new HittableList();
 
-        Material materialGround = new Lambertian(new Vec3(0.8, 0.8, 0.0));
-        Material materialCenter = new Lambertian(new Vec3(0.1, 0.2, 0.5));
-        Material leftMaterial = new Dielectric(1.50);
-        Material bubbleMaterial = new Dielectric(1.00 / 1.50);
-        Material rightMaterial = new Metal(new Vec3(0.8, 0.6, 0.2), 0);
+        Material groundMaterial = new Lambertian(new Vec3(0.5, 0.5, 0.5));
+        world.add(new Sphere(new Vec3(0, -1000, 0), 1000, groundMaterial));
 
-        world.add(new Sphere(new Vec3(0, 0, -1.2), 0.5, materialCenter));
-        world.add(new Sphere(new Vec3(0, -100.5, -1), 100, materialGround)); // background
-        world.add(new Sphere(new Vec3(-1, 0, -1), 0.5, leftMaterial));
-        world.add(new Sphere(new Vec3(-1.0, 0.0, -1.0), 0.4, bubbleMaterial));
-        world.add(new Sphere(new Vec3(1, 0, -1), 0.5, rightMaterial));
+        for (int a = -11; a < 11; a++) {
+            for (int b = -11; b < 11; b++) {
+                double chooseMat = Utils.randomDouble();
+                Vec3 center = new Vec3(
+                        a + 0.9 * Utils.randomDouble(),
+                        0.2,
+                        b + 0.9 * Utils.randomDouble()
+                );
 
-        Camera camera = new Camera();
+                if (center.subtract(new Vec3(4, 0.2, 0)).length() > 0.9) {
+                    Material sphereMaterial;
 
-        camera.aspectRatio = 16.0 / 9.0;
-        camera.imageWidth = 400;
-        camera.setSamplesPerPixel(100);
-        camera.setVerticalFov(20);
-        camera.setLookFrom(new Vec3(-2, 2, 1));
-        camera.setLookAt(new Vec3(0, 0, -1));
-        camera.setvUp(new Vec3(0, 1, 0));
+                    if (chooseMat < 0.8) {
+                        // Diffuse
+                        Vec3 albedo = Vec3.random().multiply(Vec3.random());
+                        sphereMaterial = new Lambertian(albedo);
+                        world.add(new Sphere(center, 0.2, sphereMaterial));
+                    } else if (chooseMat < 0.95) {
+                        // Metal
+                        Vec3 albedo = Vec3.random(0.5, 1);
+                        double fuzz = Utils.randomDouble(0, 0.5);
+                        sphereMaterial = new Metal(albedo, fuzz);
+                        world.add(new Sphere(center, 0.2, sphereMaterial));
+                    } else {
+                        // Glass
+                        sphereMaterial = new Dielectric(1.5);
+                        world.add(new Sphere(center, 0.2, sphereMaterial));
+                    }
+                }
+            }
+        }
 
-        camera.render(world);
+        // Three large spheres
+        Material material1 = new Dielectric(1.5);
+        world.add(new Sphere(new Vec3(0, 1, 0), 1.0, material1));
+
+        Material material2 = new Lambertian(new Vec3(0.4, 0.2, 0.1));
+        world.add(new Sphere(new Vec3(-4, 1, 0), 1.0, material2));
+
+        Material material3 = new Metal(new Vec3(0.7, 0.6, 0.5), 0.0);
+        world.add(new Sphere(new Vec3(4, 1, 0), 1.0, material3));
+
+        // Camera
+        Camera cam = new Camera();
+
+        cam.aspectRatio = 16.0 / 9.0;
+        cam.imageWidth = 400;
+        cam.setSamplesPerPixel(50);
+        cam.maxDepth = 50;
+
+        cam.setVerticalFov(20);
+        cam.setLookFrom(new Vec3(13, 2, 3));
+        cam.setLookAt(new Vec3(0, 0, 0));
+        cam.setvUp(new Vec3(0, 1, 0));
+
+        cam.setDeFocusAngle(0.6);
+        cam.setFocusDist(10.0);
+
+        cam.render(world);
     }
 }
