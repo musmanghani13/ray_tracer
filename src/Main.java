@@ -26,13 +26,15 @@ public class Main {
         HittableList world = new HittableList();
 
         Material materialGround = new Lambertian(new Vec3(0.8, 0.8, 0.0));
-        Material materialCenter = new Lambertian(new Vec3(0.7, 0.3, 0.3));
-        Material leftMaterial = new Metal(new Vec3(0.8, 0.8, 0.8), 0.3);
+        Material materialCenter = new Lambertian(new Vec3(0.1, 0.2, 0.5));
+        Material leftMaterial = new Dielectric(1.50);
+        Material bubbleMaterial = new Dielectric(1.00 / 1.50);
         Material rightMaterial = new Metal(new Vec3(0.8, 0.6, 0.2), 0);
 
-        world.add(new Sphere(new Vec3(0, 0, -1), 0.5, materialCenter));
+        world.add(new Sphere(new Vec3(0, 0, -1.2), 0.5, materialCenter));
         world.add(new Sphere(new Vec3(0, -100.5, -1), 100, materialGround)); // background
-        world.add(new Sphere(new Vec3(-1, 0, -1), 0.3, leftMaterial));
+        world.add(new Sphere(new Vec3(-1, 0, -1), 0.5, leftMaterial));
+        world.add(new Sphere(new Vec3(-1.0, 0.0, -1.0), 0.4, bubbleMaterial));
         world.add(new Sphere(new Vec3(1, 0, -1), 0.5, rightMaterial));
 
         Camera camera = new Camera();

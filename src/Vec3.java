@@ -191,6 +191,20 @@ public class Vec3 {
         return v.subtract(n.multiply(2 * Vec3.dot(v, n)));
     }
 
+    /**
+     * Refract a vector using Snell's law
+     * @param uv The incident vector (unit length)
+     * @param n The surface normal (unit length)
+     * @param etaiOverEtat The ratio of refractive indices (eta_incident / eta_transmitted)
+     * @return The refracted vector
+     */
+    public static Vec3 refract(Vec3 uv, Vec3 n, double etaiOverEtat) {
+        double cosTheta = Math.min(Vec3.dot(uv.negate(), n), 1.0);
+        Vec3 rOutPerp = uv.add(n.multiply(cosTheta)).multiply(etaiOverEtat);
+        Vec3 rOutParallel = n.multiply(-Math.sqrt(Math.abs(1.0 - rOutPerp.lengthSquared())));
+        return rOutPerp.add(rOutParallel);
+    }
+
     public boolean nearZero() {
         double s = 1e-8;
         return (Math.abs(e[0]) < s) && (Math.abs(e[1]) < s) && (Math.abs(e[2]) < s);
