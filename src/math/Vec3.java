@@ -1,3 +1,5 @@
+package math;
+
 public class Vec3 {
     public double[] e;
 

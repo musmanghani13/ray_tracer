@@ -1,3 +1,9 @@
+package geometry;
+
+import core.Ray;
+import material.Material;
+import math.Vec3;
+
 /*
 
  */
@@ -6,7 +12,7 @@ public class HitRecord {
     public Vec3 normal;
     public double t;
     public boolean frontFacing;
-    public Material material;   // HitRecord class needs to know which material was hit
+    public Material material;   // geometry.HitRecord class needs to know which material was hit
 
     public HitRecord() {
         this.p = new Vec3();

@@ -1,3 +1,7 @@
+package core;
+
+import math.Utils;
+
 public class Interval {
     private double min;
     private double max;
@@ -35,7 +39,7 @@ public class Interval {
         return this.min < x && x < this.max;
     }
 
-    double clamp(double x) {
+    public double clamp(double x) {
         if (x < this.getMin()) return this.getMin();
         if (x > this.getMax()) return this.getMax();
         return x;

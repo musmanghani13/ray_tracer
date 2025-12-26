@@ -1,3 +1,8 @@
+package geometry;
+
+import core.Interval;
+import core.Ray;
+
 import java.util.ArrayList;
 import java.util.List;
 

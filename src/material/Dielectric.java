@@ -1,3 +1,10 @@
+package material;
+
+import core.Ray;
+import geometry.HitRecord;
+import math.Utils;
+import math.Vec3;
+
 public class Dielectric extends Material {
     private final double refractiveIndex;
 

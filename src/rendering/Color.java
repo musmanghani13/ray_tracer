@@ -1,3 +1,8 @@
+package rendering;
+
+import core.Interval;
+import math.Vec3;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 

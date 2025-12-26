@@ -1,3 +1,13 @@
+import core.Camera;
+import geometry.HittableList;
+import geometry.Sphere;
+import material.Dielectric;
+import material.Lambertian;
+import material.Material;
+import material.Metal;
+import math.Utils;
+import math.Vec3;
+
 /*
     We're building a virtual camera that shoots rays through pixels to see what color they should be.
     Think of it like reverse photography - instead of light coming TO the camera, we shoot rays FROM the camera.
@@ -5,7 +15,7 @@
     CAMERA              VIEWPORT             IMAGE FILE
            ●                 ┌─────┐             ┌─────┐
            |                 │     │             │█████│
-           |  Ray shoots →   │  ●  │  Maps to →  │█░░░█│
+           |  core.Ray shoots →   │  ●  │  Maps to →  │█░░░█│
            |  through        │     │             │█████│
            |  viewport       └─────┘             └─────┘
            |
@@ -16,8 +26,8 @@
         2. Calculate corresponding point on the viewport
             Pixel (100, 50) → Viewport point (1.5, 0.8, -1.0) in 3D
         3. Shoot a ray from camera through that viewport point (1.5, 0.8, -1.0)
-            Ray origin: Camera position (defined in Ray.java class)
-            Ray direction: From camera to viewport point (defined in Ray.java class)
+            core.Ray origin: core.Camera position (defined in core.Ray.java class)
+            core.Ray direction: From camera to viewport point (defined in core.Ray.java class)
         4. Trace the ray to see what it hits in the 3D world
         5. Determine color and write it to that pixel in the image
 */
@@ -46,7 +56,7 @@ public class Main {
                         sphereMaterial = new Lambertian(albedo);
                         world.add(new Sphere(center, 0.2, sphereMaterial));
                     } else if (chooseMat < 0.95) {
-                        // Metal
+                        // material.Metal
                         Vec3 albedo = Vec3.random(0.5, 1);
                         double fuzz = Utils.randomDouble(0, 0.5);
                         sphereMaterial = new Metal(albedo, fuzz);
@@ -70,7 +80,7 @@ public class Main {
         Material material3 = new Metal(new Vec3(0.7, 0.6, 0.5), 0.0);
         world.add(new Sphere(new Vec3(4, 1, 0), 1.0, material3));
 
-        // Camera
+        // core.Camera
         Camera cam = new Camera();
 
         cam.aspectRatio = 16.0 / 9.0;
@@ -78,7 +88,7 @@ public class Main {
         cam.setSamplesPerPixel(50);
         cam.maxDepth = 50;
 
-        cam.setVerticalFov(20);
+        cam.setVerticalFov(30);
         cam.setLookFrom(new Vec3(13, 2, 3));
         cam.setLookAt(new Vec3(0, 0, 0));
         cam.setvUp(new Vec3(0, 1, 0));

@@ -1,6 +1,16 @@
+package core;
+
+import geometry.HitRecord;
+import geometry.Hittable;
+import material.ScatterRecord;
+import math.Utils;
+import math.Vec3;
+import rendering.Color;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+
 
 public class Camera {
     private int imageHeight;
