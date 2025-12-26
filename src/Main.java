@@ -80,15 +80,14 @@ public class Main {
         Material material3 = new Metal(new Vec3(0.7, 0.6, 0.5), 0.0);
         world.add(new Sphere(new Vec3(4, 1, 0), 1.0, material3));
 
-        // core.Camera
         Camera cam = new Camera();
 
         cam.aspectRatio = 16.0 / 9.0;
-        cam.imageWidth = 400;
-        cam.setSamplesPerPixel(50);
+        cam.imageWidth = 1200;
+        cam.setSamplesPerPixel(500);
         cam.maxDepth = 50;
 
-        cam.setVerticalFov(30);
+        cam.setVerticalFov(20);
         cam.setLookFrom(new Vec3(13, 2, 3));
         cam.setLookAt(new Vec3(0, 0, 0));
         cam.setvUp(new Vec3(0, 1, 0));

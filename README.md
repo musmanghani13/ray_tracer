@@ -1,6 +1,6 @@
-# Java core.Ray Tracer
+# Ray Tracer
 
-A physically-based ray tracer implementation in Java.
+A ray tracer engine implementation in Java.
 
 ## Overview
 
@@ -23,9 +23,27 @@ This project is based on:
 ## Gallery
 
 ### High Quality Render
-![High Quality](images/output_10x10.jpg)
+![High Quality](images/high_quality_output.jpg)
 
-*The iconic cover scene: Glass, diffuse, and metal materials with depth of field*
+*Glass, diffuse, and metal materials with depth of field. This image took 45 minutes to render on my machine with the following camera settings.*
+```java
+        Camera cam = new Camera();
+
+        cam.aspectRatio = 16.0 / 9.0;
+        cam.imageWidth = 1200;
+        cam.setSamplesPerPixel(500);
+        cam.maxDepth = 50;
+
+        cam.setVerticalFov(20);
+        cam.setLookFrom(new Vec3(13, 2, 3));
+        cam.setLookAt(new Vec3(0, 0, 0));
+        cam.setvUp(new Vec3(0, 1, 0));
+
+        cam.setDeFocusAngle(0.6);
+        cam.setFocusDist(10.0);
+
+        cam.render(world);
+```
 
 ### Simple Scene
 ![Simple Scene](images/output_3_materials.jpg)
