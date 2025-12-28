@@ -46,4 +46,8 @@ public class HittableList implements Hittable {
         }
         return hitAnything;
     }
+
+    public int size() {
+        return objects.size();
+    }
 }

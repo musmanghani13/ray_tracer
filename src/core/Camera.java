@@ -2,6 +2,7 @@ package core;
 
 import geometry.HitRecord;
 import geometry.Hittable;
+import geometry.HittableList;
 import material.ScatterRecord;
 import math.Utils;
 import math.Vec3;
@@ -10,6 +11,7 @@ import rendering.Color;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.stream.IntStream;
 
 
 public class Camera {
@@ -24,6 +26,7 @@ public class Camera {
     private Vec3 lookFrom;
     private Vec3 lookAt;
     private Vec3 vUp;
+    private final ThreadLocal<HitRecord> recordThreadLocal = ThreadLocal.withInitial(HitRecord::new);
 
     // orthogonal vectors for camera frame
     private Vec3 u, v, w;
@@ -99,7 +102,7 @@ public class Camera {
             return new Vec3(0, 0, 0);
         }
 
-        HitRecord rec = new HitRecord();
+        HitRecord rec = recordThreadLocal.get();
 
         if (world.hit(r, new Interval(0.001, Utils.INFINITY), rec)) {
             ScatterRecord scatterRec = rec.material.scatter(r, rec);
@@ -208,6 +211,50 @@ public class Camera {
             }
 
             System.out.println("Done.");
+            System.out.println("Image created at: " + new java.io.File("image.ppm").getAbsolutePath());
+
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
+    }
+
+    public void optimizedRender(Hittable world) {
+        System.out.println("Ray Tracer started..");
+        initialize();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("image.ppm"))) {
+            writer.write("P3\n");
+            writer.write(imageWidth + " " + imageHeight + "\n");
+            writer.write("255\n");
+
+            Vec3[][] pixels = new Vec3[imageHeight][imageWidth];
+
+            IntStream.range(0, imageHeight).parallel().forEach(currentRow -> {
+                if (currentRow % 10 == 0) {
+                    System.err.println("Writing pixels at line number: " + (imageHeight - currentRow));
+                }
+
+                for (int currentColumn = 0; currentColumn < imageWidth; currentColumn++) {
+                    Vec3 pixelColor = new Vec3(0, 0, 0);
+
+                    // Sequential sample loop (no parallelization here)
+                    for (int currentSample = 0; currentSample < samplesPerPixel; currentSample++) {
+                        Ray ray = getRay(currentColumn, currentRow);
+                        pixelColor = pixelColor.add(rayColor(ray, maxDepth, world));
+                    }
+
+                    pixels[currentRow][currentColumn] = pixelColor.multiply(pixelSamplesScale);
+                }
+            });
+
+            // Write all pixels to file
+            for (int row = 0; row < imageHeight; row++) {
+                for (int col = 0; col < imageWidth; col++) {
+                    Color.writeColor(writer, pixels[row][col]);
+                }
+            }
+
+            System.err.println("Done.");
             System.out.println("Image created at: " + new java.io.File("image.ppm").getAbsolutePath());
 
         } catch (IOException e) {

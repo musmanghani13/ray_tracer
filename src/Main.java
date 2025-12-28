@@ -8,6 +8,9 @@ import material.Metal;
 import math.Utils;
 import math.Vec3;
 
+import java.time.Duration;
+import java.time.Instant;
+
 /*
     We're building a virtual camera that shoots rays through pixels to see what color they should be.
     Think of it like reverse photography - instead of light coming TO the camera, we shoot rays FROM the camera.
@@ -33,6 +36,7 @@ import math.Vec3;
 */
 public class Main {
     public static void main(String[] args) {
+        Instant startTime = Instant.now();
         HittableList world = new HittableList();
 
         Material groundMaterial = new Lambertian(new Vec3(0.5, 0.5, 0.5));
@@ -83,18 +87,24 @@ public class Main {
         Camera cam = new Camera();
 
         cam.aspectRatio = 16.0 / 9.0;
-        cam.imageWidth = 400;
-        cam.setSamplesPerPixel(50);
+        cam.imageWidth = 1200;
+        cam.setSamplesPerPixel(500);
         cam.maxDepth = 50;
 
-        cam.setVerticalFov(20);
-        cam.setLookFrom(new Vec3(13, 2, 3));
+        cam.setVerticalFov(70);
+        cam.setLookFrom(new Vec3(1, 2, 4));
         cam.setLookAt(new Vec3(0, 0, 0));
         cam.setvUp(new Vec3(0, 1, 0));
 
         cam.setDeFocusAngle(0.6);
         cam.setFocusDist(10.0);
 
-        cam.render(world);
+        cam.optimizedRender(world);
+        Instant endTime = Instant.now();
+        int hittableObjectsCount = world.size();
+
+        System.out.println("Render completed in: " + Duration.between(startTime, endTime).getSeconds() + " seconds.");
+        System.out.println("Spheres rendered: " + hittableObjectsCount);
+
     }
 }
